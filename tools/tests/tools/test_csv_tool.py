@@ -17,7 +17,7 @@ TEST_SESSION_ID = "test-session"
 @pytest.fixture
 def csv_tools(mcp: FastMCP, tmp_path: Path):
     """Register all CSV tools and return them as a dict."""
-    with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+    with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
         register_tools(mcp)
         yield {
             "csv_read": mcp._tool_manager._tools["csv_read"].fn,
@@ -82,7 +82,7 @@ class TestCsvRead:
 
     def test_read_basic_csv(self, csv_tool_fn, basic_csv, tmp_path):
         """Read a basic CSV file successfully."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="basic.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -100,7 +100,7 @@ class TestCsvRead:
 
     def test_read_with_limit(self, csv_tool_fn, basic_csv, tmp_path):
         """Read CSV with row limit."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="basic.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -119,7 +119,7 @@ class TestCsvRead:
 
     def test_read_with_offset(self, csv_tool_fn, basic_csv, tmp_path):
         """Read CSV with row offset."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="basic.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -136,7 +136,7 @@ class TestCsvRead:
 
     def test_read_with_limit_and_offset(self, csv_tool_fn, large_csv, tmp_path):
         """Read CSV with both limit and offset (pagination)."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="large.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -156,7 +156,7 @@ class TestCsvRead:
 
     def test_file_not_found(self, csv_tool_fn, session_dir, tmp_path):
         """Return error for non-existent file."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="nonexistent.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -173,7 +173,7 @@ class TestCsvRead:
         txt_file = session_dir / "data.txt"
         txt_file.write_text("name,age\nAlice,30\n")
 
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="data.txt",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -186,7 +186,7 @@ class TestCsvRead:
 
     def test_empty_csv_file(self, csv_tool_fn, empty_csv, tmp_path):
         """Return error for empty CSV file."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="empty.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -199,7 +199,7 @@ class TestCsvRead:
 
     def test_headers_only_csv(self, csv_tool_fn, headers_only_csv, tmp_path):
         """Read CSV with only headers (no data rows)."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="headers_only.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -215,7 +215,7 @@ class TestCsvRead:
 
     def test_missing_workspace_id(self, csv_tool_fn, basic_csv, tmp_path):
         """Return error when workspace_id is missing."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="basic.csv",
                 workspace_id="",
@@ -227,7 +227,7 @@ class TestCsvRead:
 
     def test_missing_agent_id(self, csv_tool_fn, basic_csv, tmp_path):
         """Return error when agent_id is missing."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="basic.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -239,7 +239,7 @@ class TestCsvRead:
 
     def test_missing_session_id(self, csv_tool_fn, basic_csv, tmp_path):
         """Return error when session_id is missing."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="basic.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -254,7 +254,7 @@ class TestCsvRead:
         csv_file = session_dir / "unicode.csv"
         csv_file.write_text("名前,年齢,都市\n太郎,30,東京\nAlice,25,北京\n", encoding="utf-8")
 
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="unicode.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -274,7 +274,7 @@ class TestCsvRead:
             'name,address,note\n"Smith, John","123 Main St, Apt 4","Hello, world"\n'
         )
 
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="quoted.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -288,7 +288,7 @@ class TestCsvRead:
 
     def test_path_traversal_blocked(self, csv_tool_fn, session_dir, tmp_path):
         """Prevent path traversal attacks."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="../../../etc/passwd",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -300,7 +300,7 @@ class TestCsvRead:
 
     def test_offset_beyond_rows(self, csv_tool_fn, basic_csv, tmp_path):
         """Offset beyond available rows returns empty result."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tool_fn(
                 path="basic.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -320,7 +320,7 @@ class TestCsvWrite:
 
     def test_write_new_csv(self, csv_tools, session_dir, tmp_path):
         """Write a new CSV file successfully."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_write"](
                 path="output.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -346,7 +346,7 @@ class TestCsvWrite:
 
     def test_write_creates_parent_directories(self, csv_tools, session_dir, tmp_path):
         """Write creates parent directories if needed."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_write"](
                 path="subdir/nested/output.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -361,7 +361,7 @@ class TestCsvWrite:
 
     def test_write_empty_columns_error(self, csv_tools, session_dir, tmp_path):
         """Return error when columns is empty."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_write"](
                 path="output.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -376,7 +376,7 @@ class TestCsvWrite:
 
     def test_write_non_csv_extension_error(self, csv_tools, session_dir, tmp_path):
         """Return error for non-CSV file extension."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_write"](
                 path="output.txt",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -391,7 +391,7 @@ class TestCsvWrite:
 
     def test_write_filters_extra_columns(self, csv_tools, session_dir, tmp_path):
         """Extra columns in rows are filtered out."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_write"](
                 path="output.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -409,7 +409,7 @@ class TestCsvWrite:
 
     def test_write_empty_rows(self, csv_tools, session_dir, tmp_path):
         """Write CSV with headers but no rows."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_write"](
                 path="output.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -427,7 +427,7 @@ class TestCsvWrite:
 
     def test_write_unicode_content(self, csv_tools, session_dir, tmp_path):
         """Write CSV with Unicode content."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_write"](
                 path="unicode.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -449,7 +449,7 @@ class TestCsvAppend:
 
     def test_append_to_existing_csv(self, csv_tools, basic_csv, tmp_path):
         """Append rows to an existing CSV file."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_append"](
                 path="basic.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -467,7 +467,7 @@ class TestCsvAppend:
 
     def test_append_file_not_found(self, csv_tools, session_dir, tmp_path):
         """Return error when file doesn't exist."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_append"](
                 path="nonexistent.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -481,7 +481,7 @@ class TestCsvAppend:
 
     def test_append_empty_rows_error(self, csv_tools, basic_csv, tmp_path):
         """Return error when rows is empty."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_append"](
                 path="basic.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -495,7 +495,7 @@ class TestCsvAppend:
 
     def test_append_filters_extra_columns(self, csv_tools, basic_csv, session_dir, tmp_path):
         """Extra columns in rows are filtered out based on existing headers."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_append"](
                 path="basic.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -516,7 +516,7 @@ class TestCsvAppend:
         txt_file = session_dir / "data.txt"
         txt_file.write_text("name\nAlice\n")
 
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_append"](
                 path="data.txt",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -534,7 +534,7 @@ class TestCsvInfo:
 
     def test_get_info_basic_csv(self, csv_tools, basic_csv, tmp_path):
         """Get info about a basic CSV file."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_info"](
                 path="basic.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -551,7 +551,7 @@ class TestCsvInfo:
 
     def test_get_info_large_csv(self, csv_tools, large_csv, tmp_path):
         """Get info about a large CSV file."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_info"](
                 path="large.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -565,7 +565,7 @@ class TestCsvInfo:
 
     def test_get_info_file_not_found(self, csv_tools, session_dir, tmp_path):
         """Return error when file doesn't exist."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_info"](
                 path="nonexistent.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -578,7 +578,7 @@ class TestCsvInfo:
 
     def test_get_info_empty_csv(self, csv_tools, empty_csv, tmp_path):
         """Return error for empty CSV file."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_info"](
                 path="empty.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -591,7 +591,7 @@ class TestCsvInfo:
 
     def test_get_info_headers_only(self, csv_tools, headers_only_csv, tmp_path):
         """Get info about CSV with only headers."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_info"](
                 path="headers_only.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -608,7 +608,7 @@ class TestCsvInfo:
         txt_file = session_dir / "data.txt"
         txt_file.write_text("name\nAlice\n")
 
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_info"](
                 path="data.txt",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -639,7 +639,7 @@ class TestCsvSql:
 
     def test_basic_select(self, csv_tools, products_csv, tmp_path):
         """Execute basic SELECT query."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_sql"](
                 path="products.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -655,7 +655,7 @@ class TestCsvSql:
 
     def test_where_clause(self, csv_tools, products_csv, tmp_path):
         """Filter with WHERE clause."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_sql"](
                 path="products.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -672,7 +672,7 @@ class TestCsvSql:
 
     def test_aggregate_functions(self, csv_tools, products_csv, tmp_path):
         """Use aggregate functions."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_sql"](
                 path="products.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -689,7 +689,7 @@ class TestCsvSql:
 
     def test_order_by_and_limit(self, csv_tools, products_csv, tmp_path):
         """Sort and limit results."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_sql"](
                 path="products.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -705,7 +705,7 @@ class TestCsvSql:
 
     def test_like_search(self, csv_tools, products_csv, tmp_path):
         """Search with LIKE operator."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_sql"](
                 path="products.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -720,7 +720,7 @@ class TestCsvSql:
 
     def test_file_not_found(self, csv_tools, session_dir, tmp_path):
         """Return error for non-existent file."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_sql"](
                 path="nonexistent.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -734,7 +734,7 @@ class TestCsvSql:
 
     def test_empty_query_error(self, csv_tools, products_csv, tmp_path):
         """Return error for empty query."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_sql"](
                 path="products.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -748,7 +748,7 @@ class TestCsvSql:
 
     def test_non_select_blocked(self, csv_tools, products_csv, tmp_path):
         """Block non-SELECT queries for security."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_sql"](
                 path="products.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -762,7 +762,7 @@ class TestCsvSql:
 
     def test_drop_blocked(self, csv_tools, products_csv, tmp_path):
         """Block DROP statements."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_sql"](
                 path="products.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -775,7 +775,7 @@ class TestCsvSql:
 
     def test_insert_blocked(self, csv_tools, products_csv, tmp_path):
         """Block INSERT statements."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_sql"](
                 path="products.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -788,7 +788,7 @@ class TestCsvSql:
 
     def test_invalid_sql_syntax(self, csv_tools, products_csv, tmp_path):
         """Return error for invalid SQL syntax."""
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_sql"](
                 path="products.csv",
                 workspace_id=TEST_WORKSPACE_ID,
@@ -804,7 +804,7 @@ class TestCsvSql:
         csv_file = session_dir / "unicode.csv"
         csv_file.write_text("名前,価格\n商品A,100\n商品B,200\n", encoding="utf-8")
 
-        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", str(tmp_path)):
+        with patch("aden_tools.tools.file_system_toolkits.security.WORKSPACES_DIR", tmp_path):
             result = csv_tools["csv_sql"](
                 path="unicode.csv",
                 workspace_id=TEST_WORKSPACE_ID,
